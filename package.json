@@ -1,0 +1,22 @@
+{
+  "name": "node-cicd-demo",
+  "version": "1.0.0",
+  "description": "A tiny Node.js app used for learning CI/CD pipelines and reusable GitHub Actions (composite actions + reusable workflows).",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest --colors",
+    "lint": "eslint src test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}

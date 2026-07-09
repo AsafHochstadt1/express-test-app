@@ -1,0 +1,28 @@
+name: 'Setup Project'
+description: >
+  Composite action that checks out the repo, installs the requested Node
+  version, restores the npm cache, and runs `npm ci`. Think of this as a
+  "function" you can call from any job so you don't repeat the same four
+  steps in every workflow file.
+
+inputs:
+  node-version:
+    description: 'Node.js version to install'
+    required: false
+    default: '20'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+      shell: bash

@@ -1,0 +1,69 @@
+# Main CI/CD pipeline.
+#
+# CI (Continuous Integration) part: lint + test run on every push and PR,
+# across a matrix of Node versions, so problems are caught before merge.
+#
+# CD (Continuous Delivery) part: the `deploy` job only runs after lint+test
+# succeed, and only on pushes to `main` — simulating a real deploy step.
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # Calling our composite action - the step-level "function".
+      - name: Setup project
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: '20'
+
+      - name: Run linter
+        run: npm run lint
+
+  test:
+    needs: lint
+    strategy:
+      matrix:
+        node-version: ['18', '20']
+    # Calling our reusable workflow - the workflow-level "function".
+    # `with:` passes the argument, `secrets: inherit` would pass secrets
+    # through if the reusable workflow needed any.
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: ${{ matrix.node-version }}
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup project
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: '20'
+
+      # No-op for this demo app - this is where you'd run `npm run build`
+      # for a real project.
+      - name: Build
+        run: echo "Build step placeholder - nothing to compile for this demo."
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup project
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: '20'
+
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to production..."
+          echo "Replace this step with a real deploy, e.g. to Render, Fly.io, or a VM."

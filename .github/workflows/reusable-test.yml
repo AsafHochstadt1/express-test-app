@@ -1,0 +1,37 @@
+# Reusable workflow: this file has no `push`/`pull_request` trigger of its
+# own. It only runs when another workflow calls it with `uses:` — exactly
+# like calling a function with arguments (`with:`) and reading its
+# return value (`outputs:`). This is the "function" building block at the
+# whole-workflow level, as opposed to the step-level composite action.
+
+name: Reusable - Test
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to run tests on'
+        type: string
+        default: '20'
+    outputs:
+      test-result:
+        description: 'Outcome of the test job'
+        value: ${{ jobs.test.outputs.result }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.set-result.outputs.result }}
+    steps:
+      - name: Setup project (composite action)
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Run tests
+        run: npm test
+
+      - name: Set output
+        id: set-result
+        run: echo "result=success" >> "$GITHUB_OUTPUT"
