@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app');
-const { add, subtract, multiply } = require('../src/math');
+const { power, add, subtract, multiply } = require('../src/math');
 
 describe('math functions', () => {
   test('add', () => expect(add(2, 3)).toBe(5));
