@@ -18,6 +18,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      # Local composite actions live in this repo, so the runner has to
+      # check the repo out FIRST before it can even find action.yml.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # Calling our composite action - the step-level "function".
       - name: Setup project
         uses: ./.github/actions/setup-project
@@ -43,6 +48,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup project
         uses: ./.github/actions/setup-project
         with:
@@ -58,6 +66,9 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup project
         uses: ./.github/actions/setup-project
         with:
