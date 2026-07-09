@@ -7,6 +7,7 @@ describe('math functions', () => {
   test('subtract', () => expect(subtract(5, 3)).toBe(2));
   test('multiply', () => expect(multiply(4, 3)).toBe(12));
   test('power', () => expect(power(2, 3)).toBe(8));
+  test('add', () => expect(add(2, 3)).toBe(70));
 });
 
 describe('GET /health', () => {
