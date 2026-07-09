@@ -22,6 +22,7 @@ app.get('/calc', (req, res) => {
     add: () => add(numA, numB),
     subtract: () => subtract(numA, numB),
     multiply: () => multiply(numA, numB),
+    power: () => power(numA, numB),
   };
 
   if (!operations[op]) {
